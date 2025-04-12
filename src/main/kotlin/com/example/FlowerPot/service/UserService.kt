@@ -1,5 +1,7 @@
 package com.example.FlowerPot.service
 
+import com.example.FlowerPot.config.JwtUtil
+import com.example.FlowerPot.dto.AuthResponse
 import com.example.FlowerPot.entity.Role
 import com.example.FlowerPot.entity.User
 import com.example.FlowerPot.exception.*
@@ -16,7 +18,8 @@ import org.springframework.stereotype.Service
 @Slf4j
 class UserService(
     private val userRepository: UserRepository,
-    private val passwordEncoder: PasswordEncoder
+    private val passwordEncoder: PasswordEncoder,
+    private val jwtUtil: JwtUtil
 ) {
     private val log: Logger = LoggerFactory.getLogger(UserService::class.java)
 
@@ -40,7 +43,7 @@ class UserService(
     }
 
 
-    fun loginUser(email: String, password: String): User {
+    fun loginUser(email: String, password: String): AuthResponse {
         log.info("Attempting to login user with email: $email")
 
         val user = userRepository.findByEmail(email).orElseThrow {
@@ -54,6 +57,9 @@ class UserService(
         }
 
         log.info("User login successful for email: $email")
-        return user
+
+        val authToken = jwtUtil.generateToken(user.id.toString(), user.email, user.role.name)
+
+        return AuthResponse(authToken)
     }
 }

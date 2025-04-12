@@ -48,6 +48,10 @@ dependencies {
 	testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 	implementation("org.slf4j:slf4j-api:2.0.17")
 	implementation("com.fasterxml.jackson.module:jackson-module-kotlin:2.18.3")
+	implementation("io.jsonwebtoken:jjwt-api:0.12.6")
+	runtimeOnly("io.jsonwebtoken:jjwt-impl:0.12.6")
+	runtimeOnly("io.jsonwebtoken:jjwt-jackson:0.12.6")
+	implementation("io.github.cdimascio:dotenv-kotlin:6.5.1")
 }
 
 kotlin {

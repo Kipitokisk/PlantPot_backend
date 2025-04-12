@@ -1,3 +1,5 @@
+version: '3.7'
+
 services:
   # PostgreSQL Database
   postgres:
@@ -13,6 +15,7 @@ services:
       - postgres-data:/var/lib/postgresql/data
     restart: unless-stopped
 
+  # Plant Backend
   plant-backend:
     depends_on:
       - postgres
@@ -23,9 +26,12 @@ services:
       SPRING_DATASOURCE_URL: jdbc:postgresql://postgres:5432/plant-db
       SPRING_DATASOURCE_USERNAME: postgres
       SPRING_DATASOURCE_PASSWORD: pass
+      JWT_SECRET: ${JWT_SECRET}  # Make sure this is set from .env
     ports:
       - "8080:8080"
     restart: unless-stopped
+    env_file:
+      - .env  # This will ensure the .env file is loaded for this service
 
 volumes:
   postgres-data:

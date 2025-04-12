@@ -1,6 +1,6 @@
 package com.example.FlowerPot.controller
 
-import com.example.FlowerPot.dto.SignInUpRequest
+import com.example.FlowerPot.dto.AuthRequest
 import com.example.FlowerPot.exception.*
 import com.example.FlowerPot.service.UserService
 import org.springframework.http.HttpStatus
@@ -15,9 +15,9 @@ import org.springframework.web.bind.annotation.RestController
 class UserController(private val userService: UserService) {
 
     @PostMapping("/register")
-    fun registerUser(@RequestBody signInUpRequest: SignInUpRequest): ResponseEntity<Any> {
+    fun registerUser(@RequestBody authRequest: AuthRequest): ResponseEntity<Any> {
         return try {
-            val savedUser = userService.registerUser(signInUpRequest.email, signInUpRequest.password)
+            val savedUser = userService.registerUser(authRequest.email, authRequest.password)
             ResponseEntity.status(HttpStatus.CREATED).body(savedUser)
         } catch (e: UserAlreadyExistsException) {
             ResponseEntity.status(HttpStatus.CONFLICT).body(e.message)
@@ -31,9 +31,9 @@ class UserController(private val userService: UserService) {
     }
 
     @PostMapping("/login")
-    fun loginUser(@RequestBody signInUpRequest: SignInUpRequest): ResponseEntity<Any> {
+    fun loginUser(@RequestBody authRequest: AuthRequest): ResponseEntity<Any> {
         return try {
-            val user = userService.loginUser(signInUpRequest.email, signInUpRequest.password)
+            val user = userService.loginUser(authRequest.email, authRequest.password)
             ResponseEntity.ok(user)
         } catch (e: UserNotFoundException) {
             ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.message)
